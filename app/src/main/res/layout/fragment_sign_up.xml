@@ -126,7 +126,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="Davom etish"
         android:backgroundTint="#4387C5"
         android:background="@drawable/button_background"
