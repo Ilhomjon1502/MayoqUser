@@ -30,13 +30,10 @@
             android:id="@+id/edt_login"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="20dp"
+            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="login"
-            android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:inputType="text" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -64,6 +61,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/tv_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -74,6 +72,7 @@
 
 
     <Button
+        android:id="@+id/next_btn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="Davom etish"

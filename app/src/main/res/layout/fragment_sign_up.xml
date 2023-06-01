@@ -30,13 +30,10 @@
             android:id="@+id/edt_login"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="20dp"
+            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="login"
-            android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:inputType="text"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -68,57 +65,45 @@
             android:id="@+id/edt_date"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="10dp"
+            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
-            android:hint="login"
+            android:hint="@string/tug_ilgan_yil"
             android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            tools:ignore="TextFields" />
         <EditText
             android:id="@+id/edt_address"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="10dp"
+            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
-            android:hint="login"
-            android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:hint="@string/yashash_manzil"
+            android:inputType="text"/>
         <EditText
             android:id="@+id/edt_history"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="10dp"
+            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
-            android:hint="login"
-            android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:hint="@string/kasallik_tarixi"
+            android:inputType="text" />
         <EditText
             android:id="@+id/edt_number"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/signin_edittext_background"
-            android:hint="login"
+            style="@style/register_edittext_style"
+            android:hint="@string/biriktirilgan_raqam"
             android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            tools:ignore="TextFields" />
         <EditText
             android:id="@+id/edt_phone_number"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="10dp"
+            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="login"
             android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            tools:ignore="TextFields" />
 
 
     </LinearLayout>
