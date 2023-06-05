@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.sign_up.SignUpFragment">
-
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,12 +27,12 @@
 
         <EditText
             android:id="@+id/edt_login"
+            style="@style/register_edittext_style"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="login"
-            android:inputType="text"/>
+            android:inputType="text" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -58,50 +57,54 @@
                 android:src="@drawable/password_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
             android:id="@+id/edt_date"
+            style="@style/register_edittext_style"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="@string/tug_ilgan_yil"
             android:inputType="text"
             tools:ignore="TextFields" />
+
         <EditText
             android:id="@+id/edt_address"
+            style="@style/register_edittext_style"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="@string/yashash_manzil"
-            android:inputType="text"/>
+            android:inputType="text" />
+
         <EditText
             android:id="@+id/edt_history"
+            style="@style/register_edittext_style"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
             android:hint="@string/kasallik_tarixi"
             android:inputType="text" />
+
         <EditText
             android:id="@+id/edt_number"
+            style="@style/register_edittext_style"
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:background="@drawable/signin_edittext_background"
-            style="@style/register_edittext_style"
             android:hint="@string/biriktirilgan_raqam"
             android:inputType="text"
             tools:ignore="TextFields" />
+
         <EditText
             android:id="@+id/edt_phone_number"
+            style="@style/register_edittext_style"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            style="@style/register_edittext_style"
             android:background="@drawable/signin_edittext_background"
-            android:hint="login"
+            android:hint="+998 _"
             android:inputType="text"
             tools:ignore="TextFields" />
 
@@ -110,11 +113,12 @@
 
 
     <Button
+        android:id="@+id/next_btn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Davom etish"
-        android:backgroundTint="#4387C5"
         android:background="@drawable/button_background"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:backgroundTint="#4387C5"
+        android:text="Davom etish"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
