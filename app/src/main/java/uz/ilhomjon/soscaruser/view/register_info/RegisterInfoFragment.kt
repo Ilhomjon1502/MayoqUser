@@ -17,6 +17,7 @@ class RegisterInfoFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
 
+
         return binding.root
     }
 }

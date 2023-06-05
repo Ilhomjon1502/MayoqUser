@@ -51,10 +51,10 @@ class SmsCodeFragment : Fragment() {
         sentVerificationCode(phoneNumber)
 
         binding.nextBtn.setOnClickListener {
-            var text=binding.edtPassword.text.toString()
+            var text = binding.edtPassword.text.toString()
             try {
                 verifyCode(text)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 Log.d(TAG, "onCreateView: ${e.message}")
             }
         }
@@ -129,6 +129,7 @@ class SmsCodeFragment : Fragment() {
                 Toast.makeText(binding.root.context, "Successful", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "signInWithPhoneAuthCredential: ${user!!.phoneNumber}")
                 findNavController().navigate(R.id.registerInfoFragment)
+                signUpViewModel.addUser(MyData.user!!)
             } else {
                 // Sign in failed, display a message and update the UI
                 Log.w(TAG, "signInWithCredential:failure", task.exception)
