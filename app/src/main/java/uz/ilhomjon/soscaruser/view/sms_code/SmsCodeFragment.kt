@@ -131,6 +131,9 @@ class SmsCodeFragment : Fragment() {
                 Log.d(TAG, "signInWithPhoneAuthCredential: ${user!!.phoneNumber}")
                 findNavController().navigate(R.id.registerInfoFragment)
                 signUpViewModel.addUser(MyData.user!!)
+
+                //Shared
+                MySharedPreference.init(binding.root.context)
                 MySharedPreference.setLogin(MyData.user!!.login)
                 MySharedPreference.setPassword(MyData.user!!.parol)
             } else {

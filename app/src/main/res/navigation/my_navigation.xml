@@ -30,4 +30,9 @@
         android:name="uz.ilhomjon.soscaruser.view.sms_code.SmsCodeFragment"
         android:label="fragment_sms_code"
         tools:layout="@layout/fragment_sms_code" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="uz.ilhomjon.soscaruser.view.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 </navigation>
