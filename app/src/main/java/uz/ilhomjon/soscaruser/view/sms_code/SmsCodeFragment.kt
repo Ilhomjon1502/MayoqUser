@@ -1,5 +1,6 @@
 package uz.ilhomjon.soscaruser.view.sms_code
 
+import MySharedPreference
 import android.os.Bundle
 import android.provider.Telephony.Sms
 import android.util.Log
@@ -130,6 +131,8 @@ class SmsCodeFragment : Fragment() {
                 Log.d(TAG, "signInWithPhoneAuthCredential: ${user!!.phoneNumber}")
                 findNavController().navigate(R.id.registerInfoFragment)
                 signUpViewModel.addUser(MyData.user!!)
+                MySharedPreference.setLogin(MyData.user!!.login)
+                MySharedPreference.setPassword(MyData.user!!.parol)
             } else {
                 // Sign in failed, display a message and update the UI
                 Log.w(TAG, "signInWithCredential:failure", task.exception)
