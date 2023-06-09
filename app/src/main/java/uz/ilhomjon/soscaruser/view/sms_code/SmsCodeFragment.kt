@@ -49,7 +49,7 @@ class SmsCodeFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         var phoneNumber = MyData.user!!.phoneNumber
-        sentVerificationCode(phoneNumber)
+        sentVerificationCode(phoneNumber.toString())
 
         binding.nextBtn.setOnClickListener {
             var text = binding.edtPassword.text.toString()
@@ -134,8 +134,8 @@ class SmsCodeFragment : Fragment() {
 
                 //Shared
                 MySharedPreference.init(binding.root.context)
-                MySharedPreference.setLogin(MyData.user!!.login)
-                MySharedPreference.setPassword(MyData.user!!.parol)
+                MySharedPreference.setLogin(MyData.user!!.login.toString())
+                MySharedPreference.setPassword(MyData.user!!.parol.toString())
             } else {
                 // Sign in failed, display a message and update the UI
                 Log.w(TAG, "signInWithCredential:failure", task.exception)

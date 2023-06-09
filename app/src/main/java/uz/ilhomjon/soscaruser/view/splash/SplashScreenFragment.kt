@@ -31,7 +31,7 @@ class SplashScreenFragment : Fragment() {
         if (login != "" && password != "") {
             findNavController().navigate(R.id.homeFragment)
         } else {
-            findNavController().navigate(R.id.signUpFragment)
+            findNavController().navigate(R.id.signInFragment)
         }
 
         return binding.root

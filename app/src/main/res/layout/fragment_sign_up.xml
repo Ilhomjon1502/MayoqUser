@@ -108,6 +108,19 @@
             android:inputType="text"
             tools:ignore="TextFields" />
 
+        <TextView
+            android:id="@+id/photo"
+            style="@style/register_edittext_style"
+            android:layout_width="120dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:background="@drawable/signin_edittext_background"
+            android:hint="Rasm qo'shish"
+            android:inputType="text"
+            tools:ignore="TextFields" />
+
+
 
     </LinearLayout>
 
