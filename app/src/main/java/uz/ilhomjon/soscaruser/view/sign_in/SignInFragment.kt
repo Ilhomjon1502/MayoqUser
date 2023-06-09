@@ -57,6 +57,10 @@ class SignInFragment : Fragment(), CoroutineScope {
             }
         }
 
+        binding.tvSignUp.setOnClickListener {
+            findNavController().navigate(R.id.signUpFragment)
+        }
+
         return binding.root
     }
 

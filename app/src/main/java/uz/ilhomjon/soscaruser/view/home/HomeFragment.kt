@@ -17,6 +17,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        binding.ambulanceBtn.setOnClickListener {
+
+        }
         return binding.root
     }
 }
