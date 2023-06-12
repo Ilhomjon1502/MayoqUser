@@ -35,7 +35,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var LOCATION_PERMISSION_REQUEST_CODE: Int = 1
     private var GPS_PERMISSION_REQUEST_CODE: Int = 2
-    private lateinit var getLocation: LatLng
+    private lateinit var mapFragment: SupportMapFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,9 +45,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         showEnableGPSDialog()
         requestLocationPermission()
 
-        val mapFragment= requireActivity().supportFragmentManager
-            .findFragmentById(R.id.mapContainer) as SupportMapFragment
+        mapFragment = SupportMapFragment.newInstance()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.mapContainer, mapFragment)
+            .commit()
+
+
         mapFragment.getMapAsync(this)
+
+
         return binding.root
     }
 
@@ -86,7 +92,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         } else {
             // Lokatsiya ruxsati berilgan
-            getCurrentLocation()
         }
     }
 
@@ -104,7 +109,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     grantResults[1] == PackageManager.PERMISSION_GRANTED
                 ) {
                     // Lokatsiya va GPS ruxsati berilgan
-                    getCurrentLocation()
                 } else {
                     Toast.makeText(
                         context,
@@ -116,20 +120,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-    @SuppressLint("MissingPermission")
-    private fun getCurrentLocation() {
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
-        fusedLocationProviderClient.lastLocation
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    val currentLocation = LatLng(location.latitude, location.longitude)
-                    Log.d(TAG, "getCurrentLocation: $currentLocation")
-                    getLocation = currentLocation
-                }
-            }
-    }
 
 
     // GPSni yoqishni so'raydigan dialogni ochish
@@ -154,16 +144,28 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+    @SuppressLint("MissingPermission")
     override fun onMapReady(p0: GoogleMap) {
         googleMap = p0
 
-        // Set initial camera position (optional)
-        val initialPosition = LatLng(37.7749, -122.4194) // San Francisco
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 12f))
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    val currentLocation = LatLng(location.latitude, location.longitude)
+                    Log.d("TestLocation", "onMapReady: $currentLocation")
+                    // Set initial camera position (optional)
+                    val initialPosition = LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 15f))
 
-        // Add marker to the map
-        val markerPosition = LatLng(37.7749, -122.4194)
-        googleMap.addMarker(MarkerOptions().position(markerPosition).title("Marker Title"))
+                    // Add marker to the map
+                    val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
+                    googleMap.addMarker(MarkerOptions().position(markerPosition).title("Sizning manzilingiz"))
+                }
+            }
+
+
 
     }
 }
