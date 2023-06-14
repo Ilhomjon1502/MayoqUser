@@ -60,4 +60,9 @@ dependencies {
     //GoogleMap
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
 }

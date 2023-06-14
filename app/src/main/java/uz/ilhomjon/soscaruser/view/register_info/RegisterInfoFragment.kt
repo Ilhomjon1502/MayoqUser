@@ -19,6 +19,8 @@ class RegisterInfoFragment : Fragment() {
     ): View {
 
 
+        findNavController().popBackStack()
+
         binding.nextBtn.setOnClickListener {
             findNavController().navigate(R.id.homeFragment)
         }

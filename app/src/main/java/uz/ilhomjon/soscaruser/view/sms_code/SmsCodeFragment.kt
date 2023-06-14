@@ -134,8 +134,7 @@ class SmsCodeFragment : Fragment() {
 
                 //Shared
                 MySharedPreference.init(binding.root.context)
-                MySharedPreference.setLogin(MyData.user!!.login.toString())
-                MySharedPreference.setPassword(MyData.user!!.parol.toString())
+                MySharedPreference.setUser(MyData.user!!)
             } else {
                 // Sign in failed, display a message and update the UI
                 Log.w(TAG, "signInWithCredential:failure", task.exception)

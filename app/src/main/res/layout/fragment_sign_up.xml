@@ -7,132 +7,151 @@
     android:padding="16dp"
     tools:context=".view.sign_up.SignUpFragment">
 
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:fontFamily="@font/interbold"
-            android:text="Ro'yhatdan o'ting"
-            android:textColor="#1F313D"
-            android:textSize="30dp" />
-
-        <EditText
-            android:id="@+id/edt_login"
-            style="@style/register_edittext_style"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="login"
-            android:inputType="text" />
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginBottom="20dp">
+            android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/edt_password"
+            <LinearLayout
+                android:id="@+id/liner_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/signin_edittext_background"
-                android:hint="parol"
-                android:inputType="textPassword"
-                android:paddingHorizontal="10dp"
-                android:textColor="#333333"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/show_btn"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="40dp"
+                    android:fontFamily="@font/interbold"
+                    android:text="Ro'yhatdan o'ting"
+                    android:textColor="#1F313D"
+                    android:textSize="30dp" />
+
+                <EditText
+                    android:id="@+id/edt_login"
+                    style="@style/register_edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:hint="login"
+                    android:inputType="text" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginBottom="20dp">
+
+                    <EditText
+                        android:id="@+id/edt_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/signin_edittext_background"
+                        android:hint="parol"
+                        android:inputType="textPassword"
+                        android:paddingHorizontal="10dp"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/show_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:src="@drawable/password_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <EditText
+                    android:id="@+id/edt_date"
+                    style="@style/register_edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:hint="@string/tug_ilgan_yil"
+                    android:inputType="text"
+                    tools:ignore="TextFields" />
+
+                <EditText
+                    android:id="@+id/edt_address"
+                    style="@style/register_edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:hint="@string/yashash_manzil"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/edt_history"
+                    style="@style/register_edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:hint="@string/kasallik_tarixi"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/edt_number"
+                    style="@style/register_edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:hint="@string/biriktirilgan_raqam"
+                    android:inputType="text"
+                    tools:ignore="TextFields" />
+
+                <EditText
+                    android:id="@+id/edt_phone_number"
+                    style="@style/register_edittext_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:hint="+998 _"
+                    android:inputType="text"
+                    tools:ignore="TextFields" />
+
+                <TextView
+                    android:id="@+id/photo"
+                    style="@style/register_edittext_style"
+                    android:layout_width="120dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/signin_edittext_background"
+                    android:gravity="center"
+                    android:hint="Rasm qo'shish"
+                    android:inputType="text"
+                    android:textSize="14sp"
+                    tools:ignore="TextFields" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/next_btn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/button_background"
+                android:backgroundTint="#4387C5"
+                android:text="Davom etish"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/liner_layout" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/password_icon"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-        <EditText
-            android:id="@+id/edt_date"
-            style="@style/register_edittext_style"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="@string/tug_ilgan_yil"
-            android:inputType="text"
-            tools:ignore="TextFields" />
-
-        <EditText
-            android:id="@+id/edt_address"
-            style="@style/register_edittext_style"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="@string/yashash_manzil"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/edt_history"
-            style="@style/register_edittext_style"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="@string/kasallik_tarixi"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/edt_number"
-            style="@style/register_edittext_style"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="@string/biriktirilgan_raqam"
-            android:inputType="text"
-            tools:ignore="TextFields" />
-
-        <EditText
-            android:id="@+id/edt_phone_number"
-            style="@style/register_edittext_style"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="+998 _"
-            android:inputType="text"
-            tools:ignore="TextFields" />
-
-        <TextView
-            android:id="@+id/photo"
-            style="@style/register_edittext_style"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:background="@drawable/signin_edittext_background"
-            android:hint="Rasm qo'shish"
-            android:inputType="text"
-            tools:ignore="TextFields" />
-
-
-
-    </LinearLayout>
-
-
-    <Button
-        android:id="@+id/next_btn"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/button_background"
-        android:backgroundTint="#4387C5"
-        android:text="Davom etish"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

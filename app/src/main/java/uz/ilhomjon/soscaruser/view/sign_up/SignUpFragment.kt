@@ -113,18 +113,22 @@ class SignUpFragment : Fragment(), CoroutineScope {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri ?: return@registerForActivityResult
 
+            binding.photo.text=uri.path
             val uuid = UUID.randomUUID()
             val uploadTask = reference.child(uuid.toString()).putFile(uri)
 
+            binding.progressBar.visibility=View.VISIBLE
             uploadTask.addOnSuccessListener {
                 if (it.task.isSuccessful) {
                     val downloadUrl = it.metadata?.reference?.downloadUrl
                     downloadUrl?.addOnSuccessListener { imageUri ->
                         photoUri = imageUri.toString()
+                        binding.progressBar.visibility=View.GONE
                     }
                 }
             }.addOnFailureListener {
                 Log.d(TAG, "Get Image: ${it.message}")
+                binding.progressBar.visibility=View.GONE
             }
         }
 

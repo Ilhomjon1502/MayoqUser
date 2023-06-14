@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils
 import androidx.navigation.fragment.findNavController
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentSplashScreenBinding
+import uz.ilhomjon.soscaruser.models.User
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenFragment : Fragment() {
@@ -22,23 +23,31 @@ class SplashScreenFragment : Fragment() {
 
     private val binding by lazy { FragmentSplashScreenBinding.inflate(layoutInflater) }
     private val TAG = "SplashScreenFragment"
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
 
 
+        findNavController().popBackStack()
+
         val handler = Handler(Looper.getMainLooper())
         var runnable = Runnable {
             MySharedPreference.init(binding.root.context)
-            val login = MySharedPreference.getLogin()
-            val password = MySharedPreference.getPassword()
-            Log.d(TAG, "onCreateView: $password-$login")
-            if (login != "" && password != "") {
+            var user:User?=null
+            user=MySharedPreference.getUser()
+            Log.d(TAG, "onCreateView: $user")
+            if (user.login!=null && user.parol!=null){
                 findNavController().navigate(R.id.homeFragment)
-            } else {
+            }else{
                 findNavController().navigate(R.id.signInFragment)
             }
+//            Log.d(TAG, "onCreateView: ${user.login}-${user.parol}")
+//            if (user.login != "" && user.parol != "") {
+//            } else {
+//            }
         }
         handler.postDelayed(runnable, 3000)
 

@@ -1,11 +1,14 @@
 package uz.ilhomjon.soscaruser.view.sign_in
 
+import MySharedPreference
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -33,6 +36,9 @@ class SignInFragment : Fragment(), CoroutineScope {
         savedInstanceState: Bundle?,
     ): View {
 
+
+        findNavController().popBackStack()
+
         signInRepository = SignInRepository()
         signInViewModelFactory = SignInViewModelFactory(signInRepository)
         signInViewModel =
@@ -50,8 +56,7 @@ class SignInFragment : Fragment(), CoroutineScope {
             for (user in list) {
                 if (user.login == binding.edtLogin.text.toString() && user.parol == binding.edtPassword.text.toString()) {
                     MySharedPreference.init(binding.root.context)
-                    MySharedPreference.setLogin(user.login.toString())
-                    MySharedPreference.setPassword(user.parol.toString())
+                    MySharedPreference.setUser(user)
                     findNavController().navigate(R.id.homeFragment)
                 }
             }
@@ -61,7 +66,26 @@ class SignInFragment : Fragment(), CoroutineScope {
             findNavController().navigate(R.id.signUpFragment)
         }
 
+        binding.showImage.setOnClickListener {
+            togglePasswordVisibility(binding.edtPassword)
+        }
+
         return binding.root
+    }
+
+    //Password EditText visible and invisible
+    private fun togglePasswordVisibility(editText: EditText) {
+        val currentInputType = editText.inputType
+        if (currentInputType == InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT) {
+            // Show password
+            editText.inputType =
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_CLASS_TEXT
+        } else {
+            // Hide password
+            editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
+        }
+        // Move the cursor to the end of the text
+        editText.setSelection(editText.text.length)
     }
 
     override val coroutineContext: CoroutineContext

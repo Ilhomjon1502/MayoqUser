@@ -1,5 +1,8 @@
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import uz.ilhomjon.soscaruser.models.User
 
 object MySharedPreference {
     private const val PREFERENCES_NAME = "my_preferences"
@@ -9,23 +12,21 @@ object MySharedPreference {
         sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
-    fun setLogin(username: String) {
+
+    fun setUser(user: User) {
         val editor = sharedPreferences.edit()
-        editor.putString("login", username)
+        editor.putString("user", userToJson(user))
         editor.apply()
     }
 
-    fun getLogin(): String {
-        return sharedPreferences.getString("login", "") ?: ""
+    fun getUser(): User = jsonToUser(sharedPreferences.getString("user", "{}") ?: "")
+
+    fun jsonToUser(string: String): User {
+        val gson = Gson()
+        val type = object : TypeToken<User>() {}.type
+        return gson.fromJson(string, type)
     }
 
-    fun setPassword(password:String) {
-        val editor = sharedPreferences.edit()
-        editor.putString("password", password)
-        editor.apply()
-    }
+    fun userToJson(user: User): String = Gson().toJson(user)
 
-    fun getPassword(): String {
-        return sharedPreferences.getString("password", "")?:""
-    }
 }
