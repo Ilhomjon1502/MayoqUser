@@ -3,8 +3,11 @@ package uz.ilhomjon.soscaruser.view.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -42,19 +45,46 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
 
-        showEnableGPSDialog()
+        if (!isGpsEnabled(binding.root.context)){
+            showEnableGPSDialog()
+        }
         requestLocationPermission()
 
+        val type = arguments?.getString("type")
+
+        when (type) {
+            "ambulance" -> {
+                setColor("#992145")
+                binding.carImage.setImageResource(R.drawable.ambulance_car)
+            }
+
+            "firing" -> {
+                setColor("#992145")
+                binding.carImage.setImageResource(R.drawable.firingcar)
+            }
+
+            "policy" -> {
+                setColor("#215899")
+                binding.carImage.setImageResource(R.drawable.policy_car)
+            }
+
+            "service" -> {
+                setColor("#215899")
+            }
+        }
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
         mapFragment = SupportMapFragment.newInstance()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.mapContainer, mapFragment)
             .commit()
 
-
         mapFragment.getMapAsync(this)
 
-
-        return binding.root
     }
 
     private fun requestLocationPermission() {
@@ -121,7 +151,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-
     // GPSni yoqishni so'raydigan dialogni ochish
     private fun showEnableGPSDialog() {
         val dialogBuilder = AlertDialog.Builder(binding.root.context)
@@ -139,11 +168,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    private fun addMarkersToMap(googleMap: GoogleMap, currentLocation: LatLng) {
-
-    }
-
-
     @SuppressLint("MissingPermission")
     override fun onMapReady(p0: GoogleMap) {
         googleMap = p0
@@ -156,16 +180,27 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     val currentLocation = LatLng(location.latitude, location.longitude)
                     Log.d("TestLocation", "onMapReady: $currentLocation")
                     // Set initial camera position (optional)
-                    val initialPosition = LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
+                    val initialPosition =
+                        LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 15f))
 
                     // Add marker to the map
                     val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
-                    googleMap.addMarker(MarkerOptions().position(markerPosition).title("Sizning manzilingiz"))
+                    googleMap.addMarker(
+                        MarkerOptions().position(markerPosition).title("Sizning manzilingiz")
+                    )
                 }
             }
+    }
 
+    private fun setColor(color: String) {
+        binding.addCard.setBackgroundColor(Color.parseColor(color))
+        binding.homeTv.setTextColor(Color.parseColor(color))
+        binding.locTv.setTextColor(Color.parseColor(color))
+    }
 
-
+    fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 }

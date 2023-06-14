@@ -1,36 +1,43 @@
 package uz.ilhomjon.soscaruser.view.sign_up
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.text.InputType
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentSignUpBinding
 import uz.ilhomjon.soscaruser.models.User
 import uz.ilhomjon.soscaruser.utils.MyData
+import uz.ilhomjon.soscaruser.view.sms_code.SmsCodeRepository
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModel
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModelFactory
 import java.util.UUID
+import kotlin.coroutines.CoroutineContext
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(), CoroutineScope {
 
     private val binding by lazy { FragmentSignUpBinding.inflate(layoutInflater) }
     private val TAG = "SignUpFragment"
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var reference: StorageReference
     private var photoUri = ""
+    private lateinit var smsCodeRepository: SmsCodeRepository
+    private lateinit var signUpViewModelFactory: SignUpViewModelFactory
+    private lateinit var signUpViewModel: SignUpViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -39,9 +46,25 @@ class SignUpFragment : Fragment() {
         firebaseStorage = FirebaseStorage.getInstance()
         reference = firebaseStorage.getReference("user_images")
 
+        smsCodeRepository = SmsCodeRepository()
+        signUpViewModelFactory = SignUpViewModelFactory(smsCodeRepository)
+        signUpViewModel =
+            ViewModelProvider(this, signUpViewModelFactory)[SignUpViewModel::class.java]
+
+        val list = ArrayList<User>()
+        launch {
+            signUpViewModel.getAllUsers().collectLatest {
+                list.addAll(it)
+            }
+        }
+
+
+        //Get image
         binding.photo.setOnClickListener {
             getImageContent.launch("image/*")
         }
+
+        //save btn listener
         binding.nextBtn.setOnClickListener {
             val user = User(
                 login = binding.edtLogin.text.toString(),
@@ -53,6 +76,18 @@ class SignUpFragment : Fragment() {
                 imageLink = photoUri
             )
 
+
+            //Check number from firebase realtime
+            if (list.filter { it.phoneNumber == user.phoneNumber }.isNotEmpty()) {
+                Toast.makeText(
+                    context,
+                    "Bu raqam bilan oldin royhatdan otilgan",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            //NEXT FRAGMENT
             if (user.login != "" && user.parol != "" && user.phoneNumber != "" && user.bfd != "" && user.address != "" && user.history != "" && user.imageLink != "") {
                 MyData.user = user
                 findNavController().navigate(R.id.smsCodeFragment)
@@ -64,9 +99,16 @@ class SignUpFragment : Fragment() {
                 ).show()
             }
         }
+
+        //Edit Text listener
+        binding.showBtn.setOnClickListener {
+            togglePasswordVisibility(binding.edtPassword)
+        }
         return binding.root
     }
 
+
+    //GetImage Content
     private var getImageContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri ?: return@registerForActivityResult
@@ -85,4 +127,25 @@ class SignUpFragment : Fragment() {
                 Log.d(TAG, "Get Image: ${it.message}")
             }
         }
+
+
+    //Password EditText visible and invisible
+    private fun togglePasswordVisibility(editText: EditText) {
+        val currentInputType = editText.inputType
+        if (currentInputType == InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT) {
+            // Show password
+            editText.inputType =
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_CLASS_TEXT
+        } else {
+            // Hide password
+            editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
+        }
+        // Move the cursor to the end of the text
+        editText.setSelection(editText.text.length)
+    }
+
+
+    //coroutineScope
+    override val coroutineContext: CoroutineContext
+        get() = Job()
 }
