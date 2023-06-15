@@ -9,8 +9,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.telephony.SmsManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -41,6 +43,7 @@ import uz.ilhomjon.soscaruser.models.User
 import uz.ilhomjon.soscaruser.view.sms_code.SmsCodeRepository
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModel
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModelFactory
+import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
@@ -52,6 +55,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     private var LOCATION_PERMISSION_REQUEST_CODE: Int = 1
     private var GPS_PERMISSION_REQUEST_CODE: Int = 2
     private lateinit var mapFragment: SupportMapFragment
+    private lateinit var currentLocation: LatLng
+    private val SEND_SMS_PERMISSION_REQUEST_CODE = 1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -108,6 +113,24 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
         binding.navView.addHeaderView(headerItemBinding.root)
 
+        binding.currentLocation.setOnClickListener {
+            // Check if the SEND_SMS permission is granted
+            if (ContextCompat.checkSelfPermission(binding.root.context, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                // Permission is not granted, request it
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.SEND_SMS),
+                    SEND_SMS_PERMISSION_REQUEST_CODE
+                )
+            } else {
+                // Permission is already granted, you can send SMS here
+                // Call your SMS sending method or implement your SMS logic
+                sendSMS(MySharedPreference.getUser())
+            }
+        }
+
         return binding.root
     }
 
@@ -161,7 +184,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             GPS_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                     // Lokatsiya va GPS ruxsati berilgan
                 } else {
                     Toast.makeText(
@@ -195,21 +218,21 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val currentLocation = LatLng(location.latitude, location.longitude)
-                    Log.d("TestLocation", "onMapReady: $currentLocation")
-                    // Set initial camera position (optional)
-                    val initialPosition =
-                        LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 15f))
+            if (location != null) {
+                currentLocation = LatLng(location.latitude, location.longitude)
+                Log.d("TestLocation", "onMapReady: $currentLocation")
+                // Set initial camera position (optional)
+                val initialPosition =
+                    LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 15f))
 
-                    // Add marker to the map
-                    val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
-                    googleMap.addMarker(
-                        MarkerOptions().position(markerPosition).title("Sizning manzilingiz")
-                    )
-                }
+                // Add marker to the map
+                val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
+                googleMap.addMarker(
+                    MarkerOptions().position(markerPosition).title("Sizning manzilingiz")
+                )
             }
+        }
     }
 
     private fun setColor(color: String, title: String) {
@@ -224,6 +247,28 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     fun isGpsEnabled(context: Context): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun sendSMS(user: User) {
+        try {
+            val smsManager = SmsManager.getDefault()
+
+            // on below line we are sending text message.  998907832331
+            smsManager.sendTextMessage(
+                "+998910561491",
+                null,
+                "Ism:${user.login}, Telefon raqami:${user.phoneNumber}, Yashash manzili:${user.address}, Kasallik:${user.history}",
+                null,
+                null
+            )
+
+            // on below line we are displaying a toast message for message send,
+            Toast.makeText(binding.root.context, "Message Sent", Toast.LENGTH_LONG).show()
+
+
+        } catch (e: Exception) {
+            Log.d(TAG, "sendSMS: ${e.message}")
+        }
     }
 
     override val coroutineContext: CoroutineContext
