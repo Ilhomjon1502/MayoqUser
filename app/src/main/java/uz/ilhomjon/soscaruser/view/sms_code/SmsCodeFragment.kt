@@ -20,6 +20,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentSmsCodeBinding
+import uz.ilhomjon.soscaruser.models.User
 import uz.ilhomjon.soscaruser.utils.MyData
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModel
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModelFactory
@@ -50,6 +51,16 @@ class SmsCodeFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         var phoneNumber = MyData.user!!.phoneNumber
         sentVerificationCode(phoneNumber.toString())
+
+
+        MySharedPreference.init(binding.root.context)
+        var user: User? = null
+        user = MySharedPreference.getUser()
+
+        if (user.login != null && user.parol != null) {
+            findNavController().popBackStack()
+        }
+
 
         binding.nextBtn.setOnClickListener {
             var text = binding.edtPassword.text.toString()
@@ -129,12 +140,8 @@ class SmsCodeFragment : Fragment() {
                 val user = task.result?.user
                 Toast.makeText(binding.root.context, "Successful", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "signInWithPhoneAuthCredential: ${user!!.phoneNumber}")
-                findNavController().navigate(R.id.registerInfoFragment)
-                signUpViewModel.addUser(MyData.user!!)
+                findNavController().navigate(R.id.registerMapFragment)
 
-                //Shared
-                MySharedPreference.init(binding.root.context)
-                MySharedPreference.setUser(MyData.user!!)
             } else {
                 // Sign in failed, display a message and update the UI
                 Log.w(TAG, "signInWithCredential:failure", task.exception)

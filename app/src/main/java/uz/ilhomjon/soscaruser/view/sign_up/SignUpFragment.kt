@@ -51,6 +51,17 @@ class SignUpFragment : Fragment(), CoroutineScope {
         signUpViewModel =
             ViewModelProvider(this, signUpViewModelFactory)[SignUpViewModel::class.java]
 
+
+
+        MySharedPreference.init(binding.root.context)
+        var user: User? = null
+        user = MySharedPreference.getUser()
+
+        if (user.login != null && user.parol != null) {
+            findNavController().popBackStack()
+        }
+
+
         val list = ArrayList<User>()
         launch {
             signUpViewModel.getAllUsers().collectLatest {
@@ -73,7 +84,11 @@ class SignUpFragment : Fragment(), CoroutineScope {
                 address = binding.edtAddress.text.toString(),
                 history = binding.edtHistory.text.toString(),
                 phoneNumber = binding.edtPhoneNumber.text.toString(),
-                imageLink = photoUri
+                imageLink = photoUri,
+                fullName = binding.edtName.text.toString(),
+                number = binding.edtNumber.text.toString(),
+                lat = null,
+                long = null
             )
 
 
@@ -113,22 +128,22 @@ class SignUpFragment : Fragment(), CoroutineScope {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri ?: return@registerForActivityResult
 
-            binding.photo.text=uri.path
+            binding.photo.text = uri.path
             val uuid = UUID.randomUUID()
             val uploadTask = reference.child(uuid.toString()).putFile(uri)
 
-            binding.progressBar.visibility=View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
             uploadTask.addOnSuccessListener {
                 if (it.task.isSuccessful) {
                     val downloadUrl = it.metadata?.reference?.downloadUrl
                     downloadUrl?.addOnSuccessListener { imageUri ->
                         photoUri = imageUri.toString()
-                        binding.progressBar.visibility=View.GONE
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }.addOnFailureListener {
                 Log.d(TAG, "Get Image: ${it.message}")
-                binding.progressBar.visibility=View.GONE
+                binding.progressBar.visibility = View.GONE
             }
         }
 
