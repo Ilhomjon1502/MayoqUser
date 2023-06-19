@@ -19,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -39,11 +40,16 @@ import kotlinx.coroutines.launch
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentMapBinding
 import uz.ilhomjon.soscaruser.databinding.HeaderItemBinding
+import uz.ilhomjon.soscaruser.models.Call
 import uz.ilhomjon.soscaruser.models.User
 import uz.ilhomjon.soscaruser.view.sms_code.SmsCodeRepository
+import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModel
+import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModelFactory
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModel
 import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModelFactory
 import java.lang.Exception
+import java.time.LocalDateTime
+import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
@@ -57,9 +63,21 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var currentLocation: LatLng
     private val SEND_SMS_PERMISSION_REQUEST_CODE = 1
+    private lateinit var mapRepository: MapRepository
+    private lateinit var mapViewModelFactory: MapViewModelFactory
+    private lateinit var mapViewModel: MapViewModel
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
+        mapRepository = MapRepository()
+        mapViewModelFactory = MapViewModelFactory(mapRepository)
+        mapViewModel =
+            ViewModelProvider(this, mapViewModelFactory)[MapViewModel::class.java]
+
+
 
         if (!isGpsEnabled(binding.root.context)) {
             showEnableGPSDialog()
@@ -115,8 +133,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
         binding.currentLocation.setOnClickListener {
             // Check if the SEND_SMS permission is granted
-            if (ContextCompat.checkSelfPermission(binding.root.context, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED
+            if (ContextCompat.checkSelfPermission(
+                    binding.root.context, Manifest.permission.SEND_SMS
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 // Permission is not granted, request it
                 ActivityCompat.requestPermissions(
@@ -128,6 +147,17 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 // Permission is already granted, you can send SMS here
                 // Call your SMS sending method or implement your SMS logic
                 sendSMS(MySharedPreference.getUser())
+
+                val call = Call(
+                    id = UUID.randomUUID().toString(),
+                    user_id = MySharedPreference.getUser().phoneNumber.toString(),
+                    worker_id = null,
+                    start_time = LocalDateTime.now().toString(),
+                    end_time = null,
+                    user_location = currentLocation.toString(),
+                    worker_location = null
+                )
+                mapViewModel.addCall(call)
             }
         }
 
