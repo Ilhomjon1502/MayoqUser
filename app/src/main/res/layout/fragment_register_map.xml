@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".view.register_map.RegisterMapFragment">
+
+
+    <ImageView
+        android:id="@+id/loc_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/location"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/interbold"
+        android:text="Foydalanish \nuchun zarur!"
+        android:textColor="#4387C5"
+        android:textSize="35sp"
+        app:layout_constraintTop_toBottomOf="@id/loc_image" />
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/interregular"
+        android:text="@string/register_map_tv1"
+        android:textColor="#777777"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/interregular"
+        android:text="@string/register_map_tv2"
+        android:textColor="#777777"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv1" />
+    <Button
+        android:id="@+id/open_map"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:backgroundTint="#4387C5"
+        android:text="Xaritani ochish"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv2"/>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:cornerRadius="8dp"
+        android:backgroundTint="#4387C5"
+        android:text="Davom etish"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

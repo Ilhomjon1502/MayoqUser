@@ -131,13 +131,13 @@
             </LinearLayout>
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_btn"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/button_background"
                 android:backgroundTint="#4387C5"
                 android:text="Davom etish"
+                app:cornerRadius="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/liner_layout" />
 

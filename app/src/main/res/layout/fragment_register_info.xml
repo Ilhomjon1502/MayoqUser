@@ -30,11 +30,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/next_btn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/button_background"
+        app:cornerRadius="8dp"
         android:backgroundTint="#4387C5"
         android:text="Roziman"
         app:layout_constraintBottom_toBottomOf="parent" />

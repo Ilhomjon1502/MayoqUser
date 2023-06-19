@@ -11,4 +11,6 @@
     <string name="todo">TODO</string>
     <string name="hozirgi_njoylashuvga">Hozirgi \njoylashuvga</string>
     <string name="uyimga_nchaqirish">Uyimga \nchaqirish</string>
+    <string name="register_map_tv1">Ushbu sahifada siz doimiy yashaydigan uyingizni elektron xarita orqali to’g’ri belgilashingiz lozim.</string>
+    <string name="register_map_tv2">Eslatma: Agarda siz elektron xarita orqali doimiy yashash joyingizni noto’g’ri belgilasangiz, har gal yordam chaqirganingizda u boshqa joyga ketib qoladi, iltimos manzilni to’g’ri kiriting.</string>
 </resources>

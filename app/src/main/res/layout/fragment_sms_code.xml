@@ -47,14 +47,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_info"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/next_btn"
         android:layout_width="273dp"
         android:layout_height="40dp"
         android:text="Davom etish"
         android:backgroundTint="#4387C5"
         android:layout_marginTop="35dp"
-        android:background="@drawable/button_background"
+        app:cornerRadius="8dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edt_password"/>
