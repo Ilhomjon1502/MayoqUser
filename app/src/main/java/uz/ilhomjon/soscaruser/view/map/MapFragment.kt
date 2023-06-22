@@ -29,24 +29,18 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentMapBinding
 import uz.ilhomjon.soscaruser.databinding.HeaderItemBinding
 import uz.ilhomjon.soscaruser.models.Call
 import uz.ilhomjon.soscaruser.models.User
-import uz.ilhomjon.soscaruser.view.sms_code.SmsCodeRepository
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModel
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModelFactory
-import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModel
-import uz.ilhomjon.soscaruser.viewmodel.signupviewmodel.SignUpViewModelFactory
 import java.lang.Exception
 import java.time.LocalDateTime
 import java.util.UUID
@@ -62,7 +56,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     private var GPS_PERMISSION_REQUEST_CODE: Int = 2
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var currentLocation: LatLng
-    private val SEND_SMS_PERMISSION_REQUEST_CODE = 1
+    private val SEND_SMS_PERMISSION_REQUEST_CODE = 3
     private lateinit var mapRepository: MapRepository
     private lateinit var mapViewModelFactory: MapViewModelFactory
     private lateinit var mapViewModel: MapViewModel
@@ -132,35 +126,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
         binding.navView.addHeaderView(headerItemBinding.root)
 
         binding.currentLocation.setOnClickListener {
-            // Check if the SEND_SMS permission is granted
-            if (ContextCompat.checkSelfPermission(
-                    binding.root.context, Manifest.permission.SEND_SMS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // Permission is not granted, request it
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.SEND_SMS),
-                    SEND_SMS_PERMISSION_REQUEST_CODE
-                )
-            } else {
-                // Permission is already granted, you can send SMS here
-                // Call your SMS sending method or implement your SMS logic
-                sendSMS(MySharedPreference.getUser())
+            addCall(currentLocation)
+        }
 
-                val call = Call(
-                    id = UUID.randomUUID().toString(),
-                    user_id = MySharedPreference.getUser().phoneNumber.toString(),
-                    worker_id = null,
-                    start_time = LocalDateTime.now().toString(),
-                    end_time = null,
-                    user_location_lat = currentLocation.latitude.toString(),
-                    user_location_long = currentLocation.longitude.toString(),
-                    worker_location_lat = null,
-                    worker_location_long = null
-                )
-                mapViewModel.addCall(call)
-            }
+        binding.home.setOnClickListener {
+            val location = LatLng(
+                MySharedPreference.getUser().lat!!.toDouble(),
+                MySharedPreference.getUser().long!!.toDouble()
+            )
+            addCall(location)
         }
 
         return binding.root
@@ -174,6 +148,41 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
         mapFragment.getMapAsync(this)
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun addCall(location: LatLng) {
+        // Check if the SEND_SMS permission is granted
+        if (ContextCompat.checkSelfPermission(
+                binding.root.context, Manifest.permission.SEND_SMS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.SEND_SMS),
+                SEND_SMS_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            // Permission is already granted, you can send SMS here
+            // Call your SMS sending method or implement your SMS logic
+            sendSMS(MySharedPreference.getUser())
+
+            val call = Call(
+                id = UUID.randomUUID().toString(),
+                user_id = MySharedPreference.getUser().phoneNumber.toString(),
+                worker_id = null,
+                start_time = LocalDateTime.now().toString(),
+                end_time = null,
+                user_location_lat = location.latitude.toString(),
+                user_location_long = location.longitude.toString(),
+                worker_location_lat = null,
+                worker_location_long = null,
+                ism_familiya = MySharedPreference.getUser().fullName.toString(),
+                medical_history = MySharedPreference.getUser().history.toString()
+            )
+            mapViewModel.addCall(call)
+        }
     }
 
     private fun requestLocationPermission() {
@@ -256,6 +265,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 // Set initial camera position (optional)
                 val initialPosition =
                     LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
+
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 15f))
 
                 // Add marker to the map
@@ -287,7 +297,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
             // on below line we are sending text message.  998907832331
             smsManager.sendTextMessage(
-                "+998911701078",
+                "${user.number}",
                 null,
                 "Ism:${user.login}, Telefon raqami:${user.phoneNumber}, Yashash manzili:${user.address}, Kasallik:${user.history}",
                 null,

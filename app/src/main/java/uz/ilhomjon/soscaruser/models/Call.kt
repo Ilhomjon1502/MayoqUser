@@ -11,6 +11,9 @@ class Call {
     var user_location_long: String? = null
     var worker_location_lat: String? = null
     var worker_location_long: String? = null
+    var ism_familiya:String?=null
+    var medical_history:String?=null
+
 
     constructor(
         id: String?,
@@ -21,7 +24,9 @@ class Call {
         user_location_lat: String?,
         user_location_long: String?,
         worker_location_lat: String?,
-        worker_location_long: String?
+        worker_location_long: String?,
+        ism_familiya: String?,
+        medical_history: String?
     ) {
         this.id = id
         this.user_id = user_id
@@ -32,12 +37,14 @@ class Call {
         this.user_location_long = user_location_long
         this.worker_location_lat = worker_location_lat
         this.worker_location_long = worker_location_long
+        this.ism_familiya = ism_familiya
+        this.medical_history = medical_history
     }
 
     constructor()
 
     override fun toString(): String {
-        return "Call(id=$id, user_id=$user_id, worker_id=$worker_id, start_time=$start_time, end_time=$end_time, user_location_lat=$user_location_lat, user_location_long=$user_location_long, worker_location_lat=$worker_location_lat, worker_location_long=$worker_location_long)"
+        return "Call(id=$id, user_id=$user_id, worker_id=$worker_id, start_time=$start_time, end_time=$end_time, user_location_lat=$user_location_lat, user_location_long=$user_location_long, worker_location_lat=$worker_location_lat, worker_location_long=$worker_location_long, ism_familiya=$ism_familiya, medical_history=$medical_history)"
     }
 
 
