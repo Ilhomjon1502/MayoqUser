@@ -77,6 +77,7 @@ class SignUpFragment : Fragment(), CoroutineScope {
 
         //save btn listener
         binding.nextBtn.setOnClickListener {
+            Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show()
             val user = User(
                 login = binding.edtLogin.text.toString(),
                 parol = binding.edtPassword.text.toString(),
