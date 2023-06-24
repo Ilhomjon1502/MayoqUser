@@ -66,7 +66,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     private lateinit var mapViewModelFactory: MapViewModelFactory
     private lateinit var mapViewModel: MapViewModel
     private lateinit var currentCarLocation: LatLng
-    private lateinit var worker: Worker
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
