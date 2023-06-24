@@ -32,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -262,6 +263,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     override fun onMapReady(p0: GoogleMap) {
         googleMap = p0
 
+        val coordinates = ArrayList<LatLng>()
+
+        //User Location
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
@@ -272,6 +276,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 val initialPosition =
                     LatLng(currentLocation.latitude, currentLocation.longitude) // San Francisco
 
+                coordinates.add(initialPosition)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialPosition, 15f))
 
                 // Add marker to the map
@@ -282,6 +287,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
             }
         }
 
+        //Worker Location
         val callList = ArrayList<Call>()
         val markerList = ArrayList<Marker>()
         launch {
@@ -295,10 +301,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
             }
             markerList.clear()
             if (call.worker_id != null && call.user_id == MySharedPreference.getUser().phoneNumber) {
+                Toast.makeText(context, "Sizning so'rovingiz qabul qilindi.", Toast.LENGTH_SHORT)
+                    .show()
                 currentCarLocation = LatLng(
                     call.worker_location_lat!!.toDouble(),
                     call.worker_location_long!!.toDouble()
                 )
+                coordinates.add(currentLocation)
                 val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
                 val marker = googleMap.addMarker(
                     MarkerOptions().position(markerPosition).title("Yetib kelmoqda...")
@@ -306,6 +315,18 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 markerList.add(marker!!)
             }
         }
+
+
+        //PolyLine
+        val polylineOptions = PolylineOptions()
+            .addAll(coordinates)
+            .color(Color.RED) // Set the color of the polyline
+
+        googleMap.addPolyline(polylineOptions)
+
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinates[0], 12f)
+        googleMap.moveCamera(cameraUpdate)
+
     }
 
     private fun setColor(color: String, title: String) {
