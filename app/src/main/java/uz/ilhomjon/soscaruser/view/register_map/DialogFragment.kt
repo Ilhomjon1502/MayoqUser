@@ -24,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentDialogBinding
@@ -44,11 +45,13 @@ class DialogFragment : androidx.fragment.app.DialogFragment(), OnMapReadyCallbac
     ): View {
 
         binding.cancel.setOnClickListener {
+            Toast.makeText(context, "Iltimos uy manzilingizni kiriting.", Toast.LENGTH_SHORT).show()
             dismiss()
         }
         binding.save.setOnClickListener {
-            MyData.user!!.lat=currentLocation.latitude.toString()
-            MyData.user!!.long=currentLocation.longitude.toString()
+            MyData.user!!.lat = currentLocation.latitude.toString()
+            MyData.user!!.long = currentLocation.longitude.toString()
+            Toast.makeText(binding.root.context, "Sizning uy manzilingiz belgilandi.", Toast.LENGTH_SHORT).show()
             dismiss()
         }
         return binding.root
@@ -68,6 +71,8 @@ class DialogFragment : androidx.fragment.app.DialogFragment(), OnMapReadyCallbac
     override fun onMapReady(p0: GoogleMap) {
         googleMap = p0
 
+        val list = ArrayList<Marker>()
+
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
@@ -82,10 +87,26 @@ class DialogFragment : androidx.fragment.app.DialogFragment(), OnMapReadyCallbac
                 Log.d(TAG, "onMapReady: ${currentLocation.latitude}-${currentLocation.longitude}")
                 // Add marker to the map
                 val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
-                googleMap.addMarker(
+                val marker = googleMap.addMarker(
                     MarkerOptions().position(markerPosition).title("Sizning manzilingiz")
                 )
+                list.add(marker!!)
             }
+        }
+
+        googleMap.setOnMapClickListener {
+            for (marker in list) {
+                marker.remove()
+            }
+            currentLocation = LatLng(it.latitude, it.longitude)
+
+            val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
+            val marker = googleMap.addMarker(
+                MarkerOptions().position(markerPosition).title("Sizning manzilingiz")
+            )
+            list.add(marker!!)
+
+            Toast.makeText(binding.root.context, "Manzil belgilandi.", Toast.LENGTH_SHORT).show()
         }
 
     }

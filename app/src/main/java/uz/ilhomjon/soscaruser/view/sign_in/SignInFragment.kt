@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -55,9 +56,17 @@ class SignInFragment : Fragment(), CoroutineScope {
         binding.nextBtn.setOnClickListener {
             for (user in list) {
                 if (user.login == binding.edtLogin.text.toString() && user.parol == binding.edtPassword.text.toString()) {
+                    Toast.makeText(context, "Tizimga muvaffaqiyatli kirdingiz.", Toast.LENGTH_SHORT)
+                        .show()
                     MySharedPreference.init(binding.root.context)
                     MySharedPreference.setUser(user)
                     findNavController().navigate(R.id.homeFragment)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Login yoki parolda xatolik, qaytadan urinib koring.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

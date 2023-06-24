@@ -70,6 +70,10 @@ class SmsCodeFragment : Fragment() {
                 Log.d(TAG, "onCreateView: ${e.message}")
             }
         }
+
+        binding.tvCountDown.setOnClickListener {
+            findNavController().popBackStack()
+        }
         return binding.root
     }
 

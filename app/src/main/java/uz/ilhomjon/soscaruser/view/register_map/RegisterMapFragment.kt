@@ -55,11 +55,15 @@ class RegisterMapFragment : Fragment() {
 
 
         binding.nextBtn.setOnClickListener {
-            Log.d("saveUser", "onCreateView: ${MyData.user}")
-            //Firebase
-            signUpViewModel.addUser(MyData.user!!)
-            //Shared
-            findNavController().navigate(R.id.registerInfoFragment)
+            if (MyData.user!!.lat != null || MyData.user!!.long != null) {
+                Toast.makeText(context, "Iltimos uy manzilingizni kiriting.", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.d("saveUser", "onCreateView: ${MyData.user}")
+                //Firebase
+                signUpViewModel.addUser(MyData.user!!)
+                //Shared
+                findNavController().navigate(R.id.registerInfoFragment)
+            }
         }
         return binding.root
     }

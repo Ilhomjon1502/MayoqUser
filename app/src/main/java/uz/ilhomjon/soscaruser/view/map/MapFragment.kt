@@ -30,15 +30,19 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import uz.ilhomjon.soscaruser.R
 import uz.ilhomjon.soscaruser.databinding.FragmentMapBinding
 import uz.ilhomjon.soscaruser.databinding.HeaderItemBinding
 import uz.ilhomjon.soscaruser.models.Call
 import uz.ilhomjon.soscaruser.models.User
+import uz.ilhomjon.soscaruser.models.Worker
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModel
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModelFactory
 import java.lang.Exception
@@ -60,6 +64,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     private lateinit var mapRepository: MapRepository
     private lateinit var mapViewModelFactory: MapViewModelFactory
     private lateinit var mapViewModel: MapViewModel
+    private lateinit var currentCarLocation: LatLng
+    private lateinit var worker: Worker
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -273,6 +279,31 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 googleMap.addMarker(
                     MarkerOptions().position(markerPosition).title("Sizning manzilingiz")
                 )
+            }
+        }
+
+        val callList = ArrayList<Call>()
+        val markerList = ArrayList<Marker>()
+        launch {
+            mapViewModel.getAllCalls().collectLatest {
+                callList.addAll(it)
+            }
+        }
+        for (call in callList) {
+            for (marker in markerList) {
+                marker.remove()
+            }
+            markerList.clear()
+            if (call.worker_id != null && call.user_id == MySharedPreference.getUser().phoneNumber) {
+                currentCarLocation = LatLng(
+                    call.worker_location_lat!!.toDouble(),
+                    call.worker_location_long!!.toDouble()
+                )
+                val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
+                val marker = googleMap.addMarker(
+                    MarkerOptions().position(markerPosition).title("Yetib kelmoqda...")
+                )
+                markerList.add(marker!!)
             }
         }
     }
