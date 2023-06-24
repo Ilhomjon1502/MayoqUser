@@ -36,7 +36,6 @@ class MapRepository {
     }
 
     suspend fun addCall(call: Call) {
-        val callId = databaseReference.push().key ?: return
-        databaseReference.child(callId).setValue(call)
+        databaseReference.child(call.id.toString()).setValue(call)
     }
 }
