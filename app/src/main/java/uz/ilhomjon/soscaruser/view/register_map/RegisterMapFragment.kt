@@ -55,7 +55,7 @@ class RegisterMapFragment : Fragment() {
 
 
         binding.nextBtn.setOnClickListener {
-            if (MyData.user!!.lat != null || MyData.user!!.long != null) {
+            if (MyData.user!!.lat == null || MyData.user!!.long == null) {
                 Toast.makeText(context, "Iltimos uy manzilingizni kiriting.", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d("saveUser", "onCreateView: ${MyData.user}")
