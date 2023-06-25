@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.telephony.SmsManager
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -32,21 +32,19 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.soscaruser.R
+import uz.ilhomjon.soscaruser.databinding.DialogItemBinding
 import uz.ilhomjon.soscaruser.databinding.FragmentMapBinding
 import uz.ilhomjon.soscaruser.databinding.HeaderItemBinding
 import uz.ilhomjon.soscaruser.models.Call
 import uz.ilhomjon.soscaruser.models.User
-import uz.ilhomjon.soscaruser.models.Worker
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModel
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModelFactory
-import java.lang.Exception
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
@@ -128,24 +126,24 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
         val headerItemBinding = HeaderItemBinding.inflate(layoutInflater)
         headerItemBinding.menuName.text = MySharedPreference.getUser().login
         Picasso.get().load(MySharedPreference.getUser().imageLink).into(headerItemBinding.menuImg)
-
         binding.navView.addHeaderView(headerItemBinding.root)
 
         binding.currentLocation.setOnClickListener {
             addCall(currentLocation)
         }
 
-        binding.home.setOnClickListener {
-            val location = LatLng(
-                MySharedPreference.getUser().lat!!.toDouble(),
-                MySharedPreference.getUser().long!!.toDouble()
-            )
-            addCall(location)
-        }
+//        binding.home.setOnClickListener {
+//            val location = LatLng(
+//                MySharedPreference.getUser().lat!!.toDouble(),
+//                MySharedPreference.getUser().long!!.toDouble()
+//            )
+//            addCall(location)
+//        }
 
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
         mapFragment = SupportMapFragment.newInstance()
@@ -154,6 +152,28 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
         mapFragment.getMapAsync(this)
 
+
+        binding.home.setOnClickListener {
+
+            val dialog=AlertDialog.Builder(binding.root.context).create()
+            val dialogItemBinding=DialogItemBinding.inflate(LayoutInflater.from(requireContext()), binding.layout, false)
+
+            dialogItemBinding.save.setOnClickListener {
+                val location = LatLng(
+                    MySharedPreference.getUser().lat!!.toDouble(),
+                    MySharedPreference.getUser().long!!.toDouble()
+                )
+                addCall(location)
+                dialog.dismiss()
+            }
+            dialogItemBinding.cancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.setView(dialogItemBinding.root)
+
+            dialog.show()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -316,15 +336,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
         }
 
 
-        //PolyLine
-        val polylineOptions = PolylineOptions()
-            .addAll(coordinates)
-            .color(Color.RED) // Set the color of the polyline
-
-        googleMap.addPolyline(polylineOptions)
-
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinates[0], 12f)
-        googleMap.moveCamera(cameraUpdate)
+//        //PolyLine
+//        val polylineOptions = PolylineOptions()
+//            .addAll(coordinates)
+//            .color(Color.RED) // Set the color of the polyline
+//
+//        googleMap.addPolyline(polylineOptions)
+//
+//        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinates[0], 12f)
+//        googleMap.moveCamera(cameraUpdate)
 
     }
 
