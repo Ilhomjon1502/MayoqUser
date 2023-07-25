@@ -61,6 +61,7 @@ class SignInFragment : Fragment(), CoroutineScope {
                     MySharedPreference.init(binding.root.context)
                     MySharedPreference.setUser(user)
                     findNavController().navigate(R.id.homeFragment)
+                    return@setOnClickListener
                 } else {
                     Toast.makeText(
                         context,

@@ -162,6 +162,133 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_order2"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="-50dp"
+            app:cardCornerRadius="50dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_card2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F43E74">
+
+                <View
+                    android:id="@+id/line12"
+                    android:layout_width="35dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="60dp"
+                    android:background="@color/white"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/line22"
+                    android:layout_width="35dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/white"
+                    app:layout_constraintRight_toLeftOf="@id/line12"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/line32"
+                    android:layout_width="35dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/white"
+                    app:layout_constraintRight_toLeftOf="@id/line22"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/type_car"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    app:cardCornerRadius="50dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ambulance" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/car_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/interbold"
+                    android:text="40 H123OA"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@id/type_car"
+                    app:layout_constraintLeft_toRightOf="@id/type_car"
+                    app:layout_constraintTop_toTopOf="@id/type_car" />
+
+                <ImageView
+                    android:id="@+id/ic_cicrle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/circle"
+                    app:layout_constraintLeft_toLeftOf="@id/type_car"
+                    app:layout_constraintRight_toRightOf="@id/type_car"
+                    app:layout_constraintTop_toBottomOf="@id/type_car" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/interregular"
+                    android:text="Yetib boryapsiz"
+                    android:textColor="@color/white"
+                    app:layout_constraintLeft_toRightOf="@id/ic_cicrle"
+                    app:layout_constraintTop_toTopOf="@id/ic_cicrle" />
+
+                <ImageView
+                    android:id="@+id/ic_lines"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lineslines"
+                    app:layout_constraintLeft_toLeftOf="@id/type_car"
+                    app:layout_constraintRight_toRightOf="@id/type_car"
+                    app:layout_constraintTop_toBottomOf="@id/ic_cicrle" />
+
+                <ImageView
+                    android:id="@+id/ic_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/location2"
+                    app:layout_constraintLeft_toLeftOf="@id/type_car"
+                    app:layout_constraintRight_toRightOf="@id/type_car"
+                    app:layout_constraintTop_toBottomOf="@id/ic_lines" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/interregular"
+                    android:text="Chaqiruv manzili\nMustaqillik 18"
+                    android:textColor="@color/white"
+                    app:layout_constraintLeft_toRightOf="@id/ic_location"
+                    app:layout_constraintTop_toTopOf="@id/ic_location" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+
         <TextView
             android:id="@+id/topbar_title"
             android:layout_width="wrap_content"

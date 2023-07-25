@@ -13,4 +13,5 @@
         <item name="android:paddingHorizontal" tools:targetApi="o">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
+
 </resources>

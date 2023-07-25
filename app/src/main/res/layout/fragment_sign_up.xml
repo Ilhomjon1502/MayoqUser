@@ -145,10 +145,11 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_btn"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:backgroundTint="#4387C5"
                 android:text="Davom etish"
                 app:cornerRadius="8dp"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/liner_layout" />
 

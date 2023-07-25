@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="radiobutton_checked_color">#FF0000</color> <!-- Change this to your desired checked color -->
+    <color name="radiobutton_unchecked_color">#00FF00</color> <!-- Change this to your desired unchecked color -->
+
 </resources>

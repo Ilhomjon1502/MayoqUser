@@ -32,15 +32,21 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.soscaruser.R
+import uz.ilhomjon.soscaruser.databinding.AmbulanceDialogItemBinding
 import uz.ilhomjon.soscaruser.databinding.DialogItemBinding
 import uz.ilhomjon.soscaruser.databinding.FragmentMapBinding
 import uz.ilhomjon.soscaruser.databinding.HeaderItemBinding
+import uz.ilhomjon.soscaruser.databinding.PoliceDialogItemBinding
 import uz.ilhomjon.soscaruser.models.Call
 import uz.ilhomjon.soscaruser.models.User
 import uz.ilhomjon.soscaruser.viewmodel.mapviewmodel.MapViewModel
@@ -64,6 +70,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
     private lateinit var mapViewModelFactory: MapViewModelFactory
     private lateinit var mapViewModel: MapViewModel
     private lateinit var currentCarLocation: LatLng
+    private var marker: Marker? = null
+    private lateinit var polyline: Polyline
+    private lateinit var type: String
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -72,8 +81,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
         mapRepository = MapRepository()
         mapViewModelFactory = MapViewModelFactory(mapRepository)
-        mapViewModel =
-            ViewModelProvider(this, mapViewModelFactory)[MapViewModel::class.java]
+        mapViewModel = ViewModelProvider(this, mapViewModelFactory)[MapViewModel::class.java]
 
 
 
@@ -82,7 +90,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
         }
         requestLocationPermission()
 
-        val type = arguments?.getString("type")
+        type = arguments?.getString("type").toString()
 
         when (type) {
             "ambulance" -> {
@@ -132,14 +140,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
             addCall(currentLocation)
         }
 
-//        binding.home.setOnClickListener {
-//            val location = LatLng(
-//                MySharedPreference.getUser().lat!!.toDouble(),
-//                MySharedPreference.getUser().long!!.toDouble()
-//            )
-//            addCall(location)
-//        }
-
         return binding.root
     }
 
@@ -152,28 +152,121 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
 
         mapFragment.getMapAsync(this)
 
-
         binding.home.setOnClickListener {
-
-            val dialog=AlertDialog.Builder(binding.root.context).create()
-            val dialogItemBinding=DialogItemBinding.inflate(LayoutInflater.from(requireContext()), binding.layout, false)
-
-            dialogItemBinding.save.setOnClickListener {
-                val location = LatLng(
-                    MySharedPreference.getUser().lat!!.toDouble(),
-                    MySharedPreference.getUser().long!!.toDouble()
-                )
-                addCall(location)
-                dialog.dismiss()
-            }
-            dialogItemBinding.cancel.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            dialog.setView(dialogItemBinding.root)
-
-            dialog.show()
+            val location = LatLng(
+                MySharedPreference.getUser().lat!!.toDouble(),
+                MySharedPreference.getUser().long!!.toDouble()
+            )
+            showDialog(location = location)
         }
+
+        binding.currentLocation.setOnClickListener {
+            showDialog(location = currentLocation)
+        }
+
+        val calls = ArrayList<Call>()
+        launch(Dispatchers.Main) {
+            mapViewModel.getAllCalls().collectLatest {
+                calls.addAll(it)
+                Log.d("ListCalls", "onMapReady: $it")
+
+                for (call in it) {
+//                    Log.d("updateCall", "getUser: $call")
+                    if (true) {
+
+
+                        if (call.user_location_lat != null && call.worker_location_lat != null) {
+                            val coordinates = listOf(
+                                LatLng(
+                                    call.worker_location_lat!!.toDouble(),
+                                    call.worker_location_long!!.toDouble()
+                                ),
+                                LatLng(
+                                    call.user_location_lat!!.toDouble(),
+                                    call.user_location_long!!.toDouble()
+                                ),
+                            )
+
+
+                            /*PolyLine*/
+                            val polylineOptions = PolylineOptions().addAll(coordinates)
+                                .color(Color.RED) // Set the color of the polyline
+                            //globalga
+                            polyline = googleMap.addPolyline(polylineOptions)
+
+                            /*Marker*/
+                            val markerPosition = LatLng(
+                                coordinates[0].latitude, coordinates[0].longitude
+                            )
+
+                            googleMap.addMarker(
+                                MarkerOptions().position(markerPosition).title("Car manzili.")
+                            )/*Marker*/
+                            val markerPosition2 = LatLng(
+                                coordinates[0].latitude, coordinates[0].longitude
+                            )
+
+                            googleMap.addMarker(
+                                MarkerOptions().position(markerPosition2).title("Car manzili.")
+                            )
+                        }
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showDialog(location: LatLng) {
+        val dialog = AlertDialog.Builder(binding.root.context).create()
+        val dialogItemBinding =
+            DialogItemBinding.inflate(LayoutInflater.from(requireContext()), binding.layout, false)
+
+        dialogItemBinding.save.setOnClickListener {
+            addCall(location)
+            dialog.dismiss()
+            when (type) {
+                "ambulance" -> {
+                    val dialog = AlertDialog.Builder(binding.root.context).create()
+                    val ambulanceDialog = AmbulanceDialogItemBinding.inflate(layoutInflater)
+                    dialog.setView(ambulanceDialog.root)
+
+                    ambulanceDialog.closeBtn.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+
+                }
+
+                "firing" -> {
+
+                }
+
+                "policy" -> {
+                    val dialog = AlertDialog.Builder(binding.root.context).create()
+                    val policeDialog = PoliceDialogItemBinding.inflate(layoutInflater)
+                    dialog.setView(policeDialog.root)
+
+                    policeDialog.closeBtn.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+
+                }
+
+                "service" -> {
+
+                }
+            }
+        }
+        dialogItemBinding.cancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setView(dialogItemBinding.root)
+
+        dialog.show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -200,6 +293,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 worker_id = null,
                 start_time = LocalDateTime.now().toString(),
                 end_time = null,
+                chaqiruv_turi = type,
                 user_location_lat = location.latitude.toString(),
                 user_location_long = location.longitude.toString(),
                 worker_location_lat = null,
@@ -305,47 +399,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, CoroutineScope {
                 )
             }
         }
-
-        //Worker Location
-        val callList = ArrayList<Call>()
-        val markerList = ArrayList<Marker>()
-        launch {
-            mapViewModel.getAllCalls().collectLatest {
-                callList.addAll(it)
-            }
-        }
-        for (call in callList) {
-            for (marker in markerList) {
-                marker.remove()
-            }
-            markerList.clear()
-            if (call.worker_id != null && call.user_id == MySharedPreference.getUser().phoneNumber) {
-                Toast.makeText(context, "Sizning so'rovingiz qabul qilindi.", Toast.LENGTH_SHORT)
-                    .show()
-                currentCarLocation = LatLng(
-                    call.worker_location_lat!!.toDouble(),
-                    call.worker_location_long!!.toDouble()
-                )
-                coordinates.add(currentLocation)
-                val markerPosition = LatLng(currentLocation.latitude, currentLocation.longitude)
-                val marker = googleMap.addMarker(
-                    MarkerOptions().position(markerPosition).title("Yetib kelmoqda...")
-                )
-                markerList.add(marker!!)
-            }
-        }
-
-
-//        //PolyLine
-//        val polylineOptions = PolylineOptions()
-//            .addAll(coordinates)
-//            .color(Color.RED) // Set the color of the polyline
-//
-//        googleMap.addPolyline(polylineOptions)
-//
-//        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinates[0], 12f)
-//        googleMap.moveCamera(cameraUpdate)
-
     }
 
     private fun setColor(color: String, title: String) {
